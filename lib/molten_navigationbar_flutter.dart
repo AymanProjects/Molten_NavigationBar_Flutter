@@ -4,7 +4,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 class MoltenBottomNavigationBar extends StatelessWidget {
-  /// specify a Height for the bar, Default is expanded
+  /// specify a Height for the bar, Default is kBottomNavigationBarHeight
   final double barHeight;
 
   /// specify a Height for the Dome above tabs, Default is 15.0
@@ -16,7 +16,7 @@ class MoltenBottomNavigationBar extends StatelessWidget {
   /// If a null value is passed, the [domeCircleColor] will be Theme.primaryColor
   final Color domeCircleColor;
 
-  /// The size of the inner circle represents a seleted tab
+  /// The size of the inner circle representing a seleted tab
   ///
   /// Note that [domeCircleSize] must be less than or equal to (barHeight + domeHeight)
   final double domeCircleSize;
@@ -262,12 +262,12 @@ class MoltenTab {
   /// Can be any [Widget].
   final Widget icon;
 
-  /// The [icon] color when the tab is seleted
+  /// The [icon] color when the tab is selected
   ///
   /// White if not set
   final Color selectedColor;
 
-  /// The [icon] color when the tab is unseleted.
+  /// The [icon] color when the tab is unselected
   ///
   /// Grey if not set
   final Color unselectedColor;
