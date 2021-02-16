@@ -5,7 +5,6 @@ An animated bottom navigation bar with a lot of attributes to teak and have fun 
 | ![Image](example1.gif?raw=true) | ![Image](example2.gif?raw=true) | ![Image](example3.gif?raw=true) |
 | :------------: | :------------: | :------------: |
 
-<img src ="example4.png" width="310" height="580"/> 
 
 ## Getting Started
 
@@ -22,7 +21,7 @@ dependencies:
 import 'package:molten_navigationbar_flutter/molten_navigationbar_flutter.dart';
 ```
 
-### How to Use
+## How to Use
 
 You can use it in the scaffold's bottomnavigationbar, or anywhere you would like!
 Just call the `MoltenBottomNavigationBar` widget and provide the `tabs`, `onTabChange` and `selectedIndex` attributes.
