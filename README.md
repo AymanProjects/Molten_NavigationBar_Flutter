@@ -2,6 +2,11 @@
 
 An animated bottom navigation bar with a lot of attributes to teak and have fun with ✔
 
+<img src ="example1.gif"/>
+<img src ="example2.gif"/>
+<img src ="example3.gif"/>
+<img src ="example4.png"/>
+
 ## Getting Started
 
 ### Add this to your package's pubspec.yaml file:
