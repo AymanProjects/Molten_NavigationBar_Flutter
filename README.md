@@ -1,11 +1,11 @@
 # molten_navigationbar_flutter
 
-An animated bottom navigation bar with a lot of attributes to teak and have fun with ✔
+An animated bottom navigation bar with a lot of attributes to teak and have fun with ✔🚀
 
-<img src ="example1.gif"/>
-<img src ="example2.gif"/>
-<img src ="example3.gif"/>
-<img src ="example4.png"/>
+| ![Image](example1.gif?raw=true) | ![Image](example2.gif?raw=true) | ![Image](example3.gif?raw=true) |
+| :------------: | :------------: | :------------: |
+
+<img src ="example4.png" width="310" height="580"/> 
 
 ## Getting Started
 
@@ -28,7 +28,8 @@ You can use it in the scaffold's bottomnavigationbar, or anywhere you would like
 Just call the `MoltenBottomNavigationBar` widget and provide the `tabs`, `onTabChange` and `selectedIndex` attributes.
 The rest of the attributes are optional
 
-`Scaffold(
+```
+Scaffold(
    bottomNavigationBar: MoltenBottomNavigationBar(
       selectedIndex: _selectedIndex,
       onTabChange: (clickedIndex) {
@@ -48,7 +49,8 @@ The rest of the attributes are optional
         ),
       ],
    ),
-),`
+),
+```
 
 ## `MoltenBottonNavigationBar`'s Attributes
 
