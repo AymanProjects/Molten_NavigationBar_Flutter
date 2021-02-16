@@ -10,7 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
   molten_navigationbar_flutter:
-    path: C:\Users\A Y M A N\Desktop\molten_navigationbar_flutter
+    path: ../../molten_navigationbar_flutter
 
 
 
