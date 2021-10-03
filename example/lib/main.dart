@@ -17,18 +17,26 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: Theme.of(context).copyWith(primaryColor: Colors.deepPurple[400]),
+      theme: Theme.of(context).copyWith(
+        // primaryColor: Colors.deepPurple[400],
+        colorScheme: ColorScheme.fromSwatch(
+          primarySwatch: Colors.deepPurple,
+        ),
+      ),
       home: Scaffold(
         body: Center(
           child: Text(
             'Selected Tab: $_selectedIndex',
-            style: TextStyle(fontSize: 20, color: Colors.white),
+            style: TextStyle(
+              fontSize: 20,
+            ),
           ),
         ),
-        backgroundColor: Colors.deepPurple[400],
+        // backgroundColor: Colors.deepPurple[400],
         // you can use the molten bar in the scaffold's bottomNavigationBar
         bottomNavigationBar: MoltenBottomNavigationBar(
           selectedIndex: _selectedIndex,
+          domeHeight: 25,
           // specify what will happen when a tab is clicked
           onTabChange: (clickedIndex) {
             setState(() {
@@ -39,15 +47,17 @@ class _MyAppState extends State<MyApp> {
           tabs: [
             MoltenTab(
               icon: Icon(Icons.search),
-              selectedColor: Colors.yellow,
+
+              // selectedColor: Colors.yellow,
             ),
             MoltenTab(
               icon: Icon(Icons.home),
-              selectedColor: Colors.yellow,
+              title: Text('home'),
+              // selectedColor: Colors.yellow,
             ),
             MoltenTab(
               icon: Icon(Icons.person),
-              selectedColor: Colors.yellow,
+              // selectedColor: Colors.yellow,
             ),
           ],
         ),

@@ -1,7 +1,9 @@
 library molten_navigationbar_flutter;
 
+import 'dart:math';
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:collection/collection.dart';
 
 class MoltenBottomNavigationBar extends StatelessWidget {
   /// specify a Height for the bar, Default is kBottomNavigationBarHeight
@@ -14,7 +16,7 @@ class MoltenBottomNavigationBar extends StatelessWidget {
   final double domeWidth;
 
   /// If a null value is passed, the [domeCircleColor] will be Theme.primaryColor
-  final Color domeCircleColor;
+  final Color? domeCircleColor;
 
   /// The size of the inner circle representing a seleted tab
   ///
@@ -27,7 +29,7 @@ class MoltenBottomNavigationBar extends StatelessWidget {
   /// specify a color to be used as a background color, Default is Theme.bottomAppBarColor
   ///
   /// If the opacity is less than 1, it will automatically be 1
-  final Color barColor;
+  final Color? barColor;
 
   /// List of [MoltenTab], each wil have an icon as the main widget, selcted color and unselected color
   final List<MoltenTab> tabs;
@@ -42,19 +44,19 @@ class MoltenBottomNavigationBar extends StatelessWidget {
   final Curve curve;
 
   /// How long the animation should last, Default is Duration(milliseconds: 150)
-  final Duration duration;
+  final Duration? duration;
 
   /// Applied to all 4 border sides, Default is 0
   final double borderSize;
 
   /// Applied to all border sides
-  final Color borderColor;
+  final Color? borderColor;
 
   /// How much each angle is curved.
   /// Default is: (topLeft: Radius.circular(10), topRight: Radius.circular(10))
   ///
   /// Note that high raduis values may decrease the dome width.
-  final BorderRadius borderRaduis;
+  final BorderRadius? borderRaduis;
 
   /// An animated bottom navigation that makes your app looks better
   /// with customizable attrinutes
@@ -62,26 +64,23 @@ class MoltenBottomNavigationBar extends StatelessWidget {
   /// Give an [onTabChange] callback to specify what will happen whenever a tab is selected.
   /// [tabs] are of type MoltenTab, use them to display selectable tabs.
   MoltenBottomNavigationBar({
-    Key key,
+    Key? key,
     this.barHeight = kBottomNavigationBarHeight,
     this.barColor,
     this.domeHeight = 15.0,
     this.domeWidth = 100,
     this.domeCircleColor,
     this.domeCircleSize = 50.0,
-    this.tabs,
+    required this.tabs,
     this.margin = EdgeInsets.zero,
-    @required this.selectedIndex,
-    @required this.onTabChange,
+    required this.selectedIndex,
+    required this.onTabChange,
     this.duration,
     this.curve = Curves.linear,
     this.borderColor,
     this.borderSize = 0,
     this.borderRaduis,
-  })  : assert(tabs != null),
-        assert(onTabChange != null),
-        assert(selectedIndex != null),
-        super(key: key);
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -91,20 +90,19 @@ class MoltenBottomNavigationBar extends StatelessWidget {
               topLeft: Radius.circular(10), topRight: Radius.circular(10));
 
       final Color _barColor =
-          (barColor?.withOpacity(1)) ?? Theme.of(context).bottomAppBarColor;
+          (barColor?.withOpacity(1)) ?? Theme.of(context).colorScheme.surface;
 
-      final Color _domeCircleColor =
-          (domeCircleColor?.withOpacity(1)) ?? Theme.of(context).primaryColor;
+      final Color _domeCircleColor = (domeCircleColor?.withOpacity(1)) ??
+          Theme.of(context).colorScheme.primary;
 
       final double _tabWidth =
           (constraints.biggest.width - margin.horizontal) / tabs.length;
 
-      final double _domeWidth =
-          (domeWidth == null || domeWidth > _tabWidth) ? _tabWidth : domeWidth;
+      final double _domeWidth = min(domeWidth, _tabWidth);
 
       assert(domeCircleSize <= (barHeight + domeHeight),
           'domeCircleSize must be less than or equal to (barHeight + domeHeight)');
-
+      final selectedTab = tabs[selectedIndex];
       return Container(
         height: barHeight + domeHeight,
         margin: margin,
@@ -120,7 +118,7 @@ class MoltenBottomNavigationBar extends StatelessWidget {
                   width: borderSize,
                   color: (borderColor == null || borderSize < 1)
                       ? _barColor
-                      : borderColor,
+                      : borderColor!,
                 ),
               ),
             ),
@@ -143,7 +141,7 @@ class MoltenBottomNavigationBar extends StatelessWidget {
             ),
             AnimatedPositioned(
               top: 0,
-              bottom: 0,
+              bottom: selectedTab.title == null ? 0 : 16,
               curve: curve,
               duration: duration ?? Duration(milliseconds: 150),
               left: _tabWidth * selectedIndex,
@@ -158,23 +156,32 @@ class MoltenBottomNavigationBar extends StatelessWidget {
                 ),
               ),
             ),
-            ...tabs.map((tab) {
-              int index = tabs.indexOf(tab);
+            ...tabs.mapIndexed((index, tab) {
+              final isSelected = index == selectedIndex;
+              final title = tab.title;
               return AnimatedPositioned(
                 curve: curve,
                 duration: duration ?? Duration(milliseconds: 150),
-                top: index == selectedIndex ? 0 : domeHeight,
+                top: isSelected ? 0 : domeHeight,
                 bottom: 0,
                 left: _tabWidth * index,
                 width: _normalizeDomeOnEdge(_tabWidth, index),
-                child: _MoltenTabWrapper(
-                  tab: tab,
-                  onTab: () => onTabChange(index),
-                  isSelected: index == selectedIndex,
-                  circleSize: domeCircleSize,
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: _MoltenTabWrapper(
+                        tab: tab,
+                        onTab: () => onTabChange(index),
+                        isSelected: isSelected,
+                        circleSize: domeCircleSize,
+                      ),
+                    ),
+                    // const SizedBox(height: 8),
+                    if (isSelected && title != null) title,
+                  ],
                 ),
               );
-            }).toList(),
+            }),
           ],
         ),
       );
@@ -182,11 +189,11 @@ class MoltenBottomNavigationBar extends StatelessWidget {
   }
 
   Widget _animatedPositionedDome({
-    double top,
-    double domeWidth,
-    double domeHeight,
-    Color domeColor,
-    double tabWidth,
+    required double top,
+    required double domeWidth,
+    required double domeHeight,
+    required Color domeColor,
+    required double tabWidth,
   }) {
     return AnimatedPositioned(
       curve: curve,
@@ -227,10 +234,10 @@ class _MoltenTabWrapper extends StatelessWidget {
   final Function onTab;
   final double circleSize;
   _MoltenTabWrapper({
-    this.tab,
-    this.isSelected,
-    this.onTab,
-    this.circleSize,
+    required this.tab,
+    required this.isSelected,
+    required this.onTab,
+    required this.circleSize,
   });
   @override
   Widget build(BuildContext context) {
@@ -262,24 +269,28 @@ class MoltenTab {
   /// Can be any [Widget].
   final Widget icon;
 
+  /// title when tab is selected
+  final Widget? title;
+
   /// The [icon] color when the tab is selected
   ///
   /// White if not set
-  final Color selectedColor;
+  final Color? selectedColor;
 
   /// The [icon] color when the tab is unselected
   ///
   /// Grey if not set
-  final Color unselectedColor;
+  final Color? unselectedColor;
 
   /// This represents each tab in the navigation bar.
   ///
   /// [icon] must not be null
   MoltenTab({
-    @required this.icon,
+    required this.icon,
     this.selectedColor,
+    this.title,
     this.unselectedColor,
-  }) : assert(icon != null);
+  });
 }
 
 class _MoltenDome extends StatelessWidget {
@@ -287,12 +298,10 @@ class _MoltenDome extends StatelessWidget {
   final double height;
   final double width;
   _MoltenDome({
-    this.color,
-    this.height,
-    this.width,
-  })  : assert(color != null),
-        assert(height != null),
-        assert(width != null);
+    required this.color,
+    required this.height,
+    required this.width,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -309,7 +318,9 @@ class _MoltenDome extends StatelessWidget {
 
 class _DomePainter extends CustomPainter {
   final Color color;
-  _DomePainter({this.color});
+  _DomePainter({
+    required this.color,
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
