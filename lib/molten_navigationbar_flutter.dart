@@ -1,9 +1,7 @@
 library molten_navigationbar_flutter;
 
 import 'dart:math';
-import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:collection/collection.dart';
 
 class MoltenBottomNavigationBar extends StatelessWidget {
   /// specify a Height for the bar, Default is kBottomNavigationBarHeight
@@ -156,9 +154,10 @@ class MoltenBottomNavigationBar extends StatelessWidget {
                 ),
               ),
             ),
-            ...tabs.mapIndexed((index, tab) {
+            ...tabs.asMap().entries.map((entry) {
+              final index = entry.key;
               final isSelected = index == selectedIndex;
-              final title = tab.title;
+              final title = entry.value.title;
               return AnimatedPositioned(
                 curve: curve,
                 duration: duration ?? Duration(milliseconds: 150),
@@ -170,7 +169,7 @@ class MoltenBottomNavigationBar extends StatelessWidget {
                   children: [
                     Expanded(
                       child: _MoltenTabWrapper(
-                        tab: tab,
+                        tab: entry.value,
                         onTab: () => onTabChange(index),
                         isSelected: isSelected,
                         circleSize: domeCircleSize,
@@ -181,7 +180,7 @@ class MoltenBottomNavigationBar extends StatelessWidget {
                   ],
                 ),
               );
-            }),
+            }).toList(),
           ],
         ),
       );
