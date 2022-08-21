@@ -12,7 +12,7 @@ An animated bottom navigation bar with a lot of attributes to teak and have fun 
 
 ```yaml
 dependencies:
-  molten_navigationbar_flutter: ^0.0.1
+  molten_navigationbar_flutter: ^1.0.0
 ```
 
 ### Import the package
