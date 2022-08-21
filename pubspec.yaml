@@ -1,6 +1,6 @@
 name: molten_navigationbar_flutter
 description: An animated bottom navigation bar with many parameters to tweak.
-version: 1.0.0
+version: 0.0.1
 homepage: https://github.com/AymanProjects/Molten_BottomNavBar_Flutter
 
 environment:
