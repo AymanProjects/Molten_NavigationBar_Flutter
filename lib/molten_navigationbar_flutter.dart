@@ -35,6 +35,18 @@ class MoltenBottomNavigationBar extends StatelessWidget {
   /// The currently selected tab
   final int selectedIndex;
 
+  /// Shows tab title of [MoltenTab]
+  final bool showTapTitles;
+
+  /// [TextStyle] for the tab title of [MoltenTab]
+  final TextStyle? tapTitleTextStyle;
+
+  /// [Color] for the tab title of [MoltenTab] when selected
+  final Color? tapTitleSelectedColor;
+
+  /// [Color] for the tab title of [MoltenTab] when not selected
+  final Color? tapTitleUnSelectedColor;
+
   /// A callback function that will be triggered whenever a [MoltenTab] is clicked, and will return it's index.
   final Function(int index) onTabChange;
 
@@ -78,6 +90,10 @@ class MoltenBottomNavigationBar extends StatelessWidget {
     this.borderColor,
     this.borderSize = 0,
     this.borderRaduis,
+    this.showTapTitles = false,
+    this.tapTitleTextStyle,
+    this.tapTitleSelectedColor,
+    this.tapTitleUnSelectedColor,
   }) : super(key: key);
 
   @override
@@ -101,6 +117,8 @@ class MoltenBottomNavigationBar extends StatelessWidget {
       assert(domeCircleSize <= (barHeight + domeHeight),
           'domeCircleSize must be less than or equal to (barHeight + domeHeight)');
       final selectedTab = tabs[selectedIndex];
+      final theme = Theme.of(context);
+
       return Container(
         height: barHeight + domeHeight,
         margin: margin,
@@ -175,8 +193,18 @@ class MoltenBottomNavigationBar extends StatelessWidget {
                         circleSize: domeCircleSize,
                       ),
                     ),
-                    // const SizedBox(height: 8),
-                    if (isSelected && title != null) title,
+                    if (showTapTitles && title != null) ...[
+                      Material(
+                        textStyle: tapTitleTextStyle ??
+                            theme.textTheme.labelMedium?.copyWith(
+                              color: isSelected
+                                  ? tapTitleSelectedColor ?? Colors.black
+                                  : tapTitleUnSelectedColor ?? Colors.grey,
+                            ),
+                        child: title,
+                      ),
+                      const SizedBox(height: 4),
+                    ],
                   ],
                 ),
               );
@@ -232,19 +260,21 @@ class _MoltenTabWrapper extends StatelessWidget {
   final bool isSelected;
   final Function onTab;
   final double circleSize;
+
   _MoltenTabWrapper({
     required this.tab,
     required this.isSelected,
     required this.onTab,
     required this.circleSize,
   });
+
   @override
   Widget build(BuildContext context) {
     return IconTheme(
       data: IconThemeData(
         color: isSelected
-            ? tab.selectedColor ?? Colors.white
-            : tab.unselectedColor ?? Colors.grey,
+            ? tab.iconSelectedColor ?? Colors.white
+            : tab.iconUnselectedColor ?? Colors.grey,
       ),
       child: Container(
         height: circleSize,
@@ -274,21 +304,21 @@ class MoltenTab {
   /// The [icon] color when the tab is selected
   ///
   /// White if not set
-  final Color? selectedColor;
+  final Color? iconSelectedColor;
 
   /// The [icon] color when the tab is unselected
   ///
   /// Grey if not set
-  final Color? unselectedColor;
+  final Color? iconUnselectedColor;
 
   /// This represents each tab in the navigation bar.
   ///
   /// [icon] must not be null
   MoltenTab({
     required this.icon,
-    this.selectedColor,
+    this.iconSelectedColor,
     this.title,
-    this.unselectedColor,
+    this.iconUnselectedColor,
   });
 }
 
@@ -296,6 +326,7 @@ class _MoltenDome extends StatelessWidget {
   final Color color;
   final double height;
   final double width;
+
   _MoltenDome({
     required this.color,
     required this.height,
@@ -317,6 +348,7 @@ class _MoltenDome extends StatelessWidget {
 
 class _DomePainter extends CustomPainter {
   final Color color;
+
   _DomePainter({
     required this.color,
   });
