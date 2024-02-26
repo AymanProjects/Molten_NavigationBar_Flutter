@@ -157,7 +157,9 @@ class MoltenBottomNavigationBar extends StatelessWidget {
             ),
             AnimatedPositioned(
               top: 0,
-              bottom: selectedTab.title == null ? 0 : 16,
+              bottom: selectedTab.title == null
+                  ? 0
+                  : (16 + MediaQuery.of(context).padding.bottom),
               curve: curve,
               duration: duration ?? Duration(milliseconds: 150),
               left: _tabWidth * selectedIndex,
@@ -194,14 +196,18 @@ class MoltenBottomNavigationBar extends StatelessWidget {
                       ),
                     ),
                     if (showTapTitles && title != null) ...[
-                      Material(
-                        textStyle: tapTitleTextStyle ??
-                            theme.textTheme.labelMedium?.copyWith(
-                              color: isSelected
-                                  ? tapTitleSelectedColor ?? Colors.black
-                                  : tapTitleUnSelectedColor ?? Colors.grey,
-                            ),
-                        child: title,
+                      Padding(
+                        padding: EdgeInsets.only(
+                            bottom: MediaQuery.of(context).padding.bottom),
+                        child: Material(
+                          textStyle: tapTitleTextStyle ??
+                              theme.textTheme.labelMedium?.copyWith(
+                                color: isSelected
+                                    ? tapTitleSelectedColor ?? Colors.black
+                                    : tapTitleUnSelectedColor ?? Colors.grey,
+                              ),
+                          child: title,
+                        ),
                       ),
                       const SizedBox(height: 4),
                     ],
